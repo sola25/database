@@ -1,50 +1,53 @@
-package database;
+package user;
 
 public class User {
-	private Integer useId;
-	private String useName;
-	private Integer useAge;
-	private String useTel;
-	private String useAddress;
-	private String useSex;
-	
-
-	
-	public Integer getUseId() {
-		return useId;
+     private String UserId;
+     private String UserName;
+     private String UserAge;
+     private String UserSex;
+     private String UserTele;
+     private String UserAdd;
+     private String Userpass;
+	public String getUserId() {
+		return UserId;
 	}
-	public void setUseId(Integer useId) {
-		this.useId = useId;
+	public void setUserId(String userId) {
+		UserId = userId;
 	}
-	public String getUseName() {
-		return useName;
+	public String getUserName() {
+		return UserName;
 	}
-	public void setUseName(String useName) {
-		this.useName = useName;
+	public void setUserName(String userName) {
+		UserName = userName;
 	}
-	public Integer getUseAge() {
-		return useAge;
+	public String getUserAge() {
+		return UserAge;
 	}
-	public void setUseAge(Integer useAge) {
-		this.useAge = useAge;
+	public void setUserAge(String userAge) {
+		UserAge = userAge;
 	}
-	public String getUseTel() {
-		return useTel;
+	public String getUserSex() {
+		return UserSex;
 	}
-	public void setUseTel(String useTel) {
-		this.useTel = useTel;
+	public void setUserSex(String userSex) {
+		UserSex = userSex;
 	}
-	public String getUseAddress() {
-		return useAddress;
+	public String getUserTele() {
+		return UserTele;
 	}
-	public void setUseAddress(String useAddress) {
-		this.useAddress = useAddress;
+	public void setUserTele(String userTele) {
+		UserTele = userTele;
 	}
-	public String getUseSex() {
-		return useSex;
+	public String getUserAdd() {
+		return UserAdd;
 	}
-	public void setUseSex(String useSex) {
-		this.useSex = useSex;
+	public void setUserAdd(String userAdd) {
+		UserAdd = userAdd;
 	}
-
+	public String getUserpass() {
+		return Userpass;
+	}
+	public void setUserpass(String userpass) {
+		Userpass = userpass;
+	}
 }
