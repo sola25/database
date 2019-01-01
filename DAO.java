@@ -1,4 +1,4 @@
-package type;
+package list_pro;
 
 import java.sql.Connection;
 public interface DAO {

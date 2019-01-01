@@ -1,8 +1,4 @@
-package type;
-
-import type.DAOFactory;
-import type.TypeDAO;
-import type.TypeDAOMSImpl;
+package list_pro;
 
 public class DAOFactory {
 	private static DAOFactory instance;	//声明instance为工厂类
@@ -14,9 +10,9 @@ public class DAOFactory {
 	public static DAOFactory getInstance(){
 		return instance;					//返回一个工厂类的instance
 	}	
-	public static TypeDAO getTypeDAO(){
-//获得TypeDAO对象，其实是TypeDAOMSImpl对象
-		TypeDAO typeDAO = new TypeDAOMSImpl();
-		return typeDAO;
+	public static list_proDAO getlist_proDAO(){
+//获得ProductDAO对象，其实是ProductDAOMSImpl对象
+		list_proDAO list_proDAO = new list_proDAOMSImpl();
+		return list_proDAO;
 	}
 }

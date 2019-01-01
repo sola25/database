@@ -1,17 +1,16 @@
-package type;
+package list_pro;
 
 public class test {
 
 	public static void main(String[] args) {
-		TypeDAO typeDAO=DAOFactory.getInstance().getTypeDAO();
-		Type type=new Type();
-		type.setTypeId("123");
-		type.setTypeName("ÒÂ·þ");
-		typeDAO.insertType(type);
-		typeDAO.updateType(type);
-		typeDAO.getType(null);
-		typeDAO.getTypeByC("");
-		typeDAO.deleteType(null);
+		list_proDAO list_proDAO=DAOFactory.getInstance().getlist_proDAO();
+		list_pro lp=new list_pro();
+		list_proDAO.insertlist_pro(lp);
+		list_proDAO.updatelist_pro(lp);
+		list_proDAO.getlist_pro(null);
+		list_proDAO.getlist_proByC("");
+		list_proDAO.deletelist_pro(null);
+	   
 	    
 	   
 	}
