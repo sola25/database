@@ -1,4 +1,4 @@
-package express;
+package list;
 
 public class DAOFactory {
 	private static DAOFactory instance;	//声明instance为工厂类
@@ -10,9 +10,9 @@ public class DAOFactory {
 	public static DAOFactory getInstance(){
 		return instance;					//返回一个工厂类的instance
 	}	
-	public static ExpressDAO getExpressDAO(){
+	public static OrderDAO getOrderDAO(){
 //获得ProductDAO对象，其实是ProductDAOMSImpl对象
-		ExpressDAO expressDAO = new ExpressDAOMSImpl();
-		return expressDAO;
+		OrderDAO orderDAO = new OrderDAOMSImpl();
+		return orderDAO;
 	}
 }

@@ -1,4 +1,4 @@
-package express;
+package list;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,50 +1,83 @@
-package database;
-
-import java.sql.Date;
-
+package list;
 
 public class Order {
-	private String proName;
-	private Integer proNum;
-	private Integer ordId;
-	private String ordName ;
-	private Date ordTime;
-	private String ordState;
-	
-	public Integer getOrdId() {
-		return ordId;
-	}
-	public void setOrdId(Integer ordId) {
-		this.ordId = ordId;
-	}
-	public String getOrdName() {
-		return ordName;
-	}
-	public void setOrdName(String ordName) {
-		this.ordName = ordName;
-	}
-	public Date getOrdTime() {
-		return ordTime;
-	}
-	public void setOrdTime(Date ordTime) {
-		this.ordTime = ordTime;
-	}
-	public String getProName() {
-		return proName;
-	}
-	public void setProName(String proName) {
-		this.proName = proName;
-	}
-	public Integer getProNum() {
-		return proNum;
-	}
-	public void setProNum(Integer proNum) {
-		this.proNum = proNum;
-	}
-	public String getOrdState() {
-		return ordState;
-	}
-	public void setOrdState(String ordState) {
-		this.ordState = ordState;
-	}
+                  private String orderId;
+                  private String userId;
+                  private String expId;
+                  private String Time;
+                  private Float Money;
+                  private String state;
+                  private String BuyName;
+                  private String SelName;
+                  private String ProName;
+                  private int ProNum;
+                  
+                  
+public String getOrderId() {
+	return orderId;
+}
+public void setOrderId(String orderId) {
+	this.orderId = orderId;
+}
+public String getUserId() {
+	return userId;
+}
+public void setUserId(String userId) {
+	this.userId = userId;
+}
+public String getTime() {
+	return Time;
+}
+public void setTime(String time) {
+	this.Time = time;
+}
+public Float getMoney() {
+	return Money;
+}
+public void setMoney(Float money) {
+	this.Money = money;
+}
+public String getState() {
+	return state;
+}
+public void setState(String state) {
+	this.state = state;
+}
+public String getBuyName() {
+	return BuyName;
+}
+public void setBuyName(String buyName) {
+	this.BuyName = buyName;
+}
+public String getSelName() {
+	return SelName;
+}
+public void setSelName(String selName) {
+	this.SelName = selName;
+}
+public String getProName() {
+	return ProName;
+}
+public void setProName(String proName) {
+	this.ProName = proName;
+}
+public int getProNum() {
+	return ProNum;
+}
+public void setProNum(int proNum) {
+	this.ProNum = proNum;
+}
+public String getExpId() {
+	return expId;
+}
+public void setExpId(String expId) {
+	this.expId = expId;
+}
+
+
+
+
+
+
+
 }
