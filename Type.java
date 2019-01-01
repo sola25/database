@@ -1,20 +1,19 @@
-package database;
+package type;
 
 public class Type {
-	private Integer typId;
-	private String typName;
+	private String TypeId;
+	private String TypeName;
+	public String getTypeId() {
+		return TypeId;
+	}
+	public void setTypeId(String typeId) {
+		TypeId = typeId;
+	}
+	public String getTypeName() {
+		return TypeName;
+	}
+	public void setTypeName(String typeName) {
+		TypeName = typeName;
+	}
 	
-	public Integer getTypId() {
-		return typId;
-	}
-	public void setTypId(Integer typId) {
-		this.typId = typId;
-	}
-	public String getTypName() {
-		return typName;
-	}
-	public void setTypName(String typName) {
-		this.typName = typName;
-	}
-
 }

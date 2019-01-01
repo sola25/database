@@ -1,4 +1,4 @@
-package user;
+package type;
 
 import java.sql.Connection;
 public interface DAO {

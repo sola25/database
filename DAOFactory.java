@@ -1,8 +1,8 @@
-package user;
+package type;
 
-import user.DAOFactory;
-import user.UserDAO;
-import user.UserDAOMSImpl;
+import type.DAOFactory;
+import type.TypeDAO;
+import type.TypeDAOMSImpl;
 
 public class DAOFactory {
 	private static DAOFactory instance;	//声明instance为工厂类
@@ -14,9 +14,9 @@ public class DAOFactory {
 	public static DAOFactory getInstance(){
 		return instance;					//返回一个工厂类的instance
 	}	
-	public static UserDAO getUserDAO(){
-//获得UserDAO对象，其实是UserDAOMSImpl对象
-		UserDAO userDAO = new UserDAOMSImpl();
-		return userDAO;
+	public static TypeDAO getTypeDAO(){
+//获得TypeDAO对象，其实是TypeDAOMSImpl对象
+		TypeDAO typeDAO = new TypeDAOMSImpl();
+		return typeDAO;
 	}
 }
