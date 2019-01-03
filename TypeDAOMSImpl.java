@@ -186,16 +186,15 @@ public class TypeDAOMSImpl extends DAOBase implements TypeDAO {//ºÃ≥–DAOBase¡¨Ω”
 					conn = getConnection();
 					stmt = conn.createStatement();
 					String endsql = null;
-					if(sql.equals("")){
-						endsql = SEARCH_TYPETC;
-					}else{
-						endsql = SEARCH_TYPETC + " WHERE "+sql;
-					}
+					
+					endsql = SEARCH_TYPETC;
+					
 					rs=stmt.executeQuery(endsql);
 					while(rs.next()){
 						Type typ = new Type();
 						typ.setTypeId(rs.getString("type_id"));
 						typ.setTypeName(rs.getString("type_name"));
+						types.add(typ);
 
 					}
 					for(int i=0;i<types.size();i++){
