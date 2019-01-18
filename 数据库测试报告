@@ -1,0 +1,511 @@
+一、	课题内容和要求
+通过编制实际的、完整的数据库系统应用，掌握数据库系统设计的基本原理和方法。具体包括：系统的需求分析、数据库概念设计、数据库的逻辑设计、关系数据库理论、数据持久层设计和SQL语言使用等。
+
+二、	需求分析
+需求分析：选取京东案例，在原有网站和自身生活经验基础上进行一定的创新，并编写相应的实体和方法。运用DAO层结构实现数据库的访问，并且编写总体的Test类进行测试。
+（1）	DAO接口
+public Connection getConnection();//声明连接方法
+（2）	DAOBase
+public class DAOBase implements DAO //实现DAO接口中的连接方法；
+public Connection getConnection() //实现连接的方法
+（3）	DAO工厂类
+private static DAOFactory instance;	//声明instance为工厂类
+public static DAOFactory getInstance()//返回一个工厂类的instance
+public  ProductDAO getProductDAO()
+//获得ProductDAO对象，其实是ProductDAOMSImpl对象
+（4）	实体类（内容根据其属性有所不同）
+public String getProId() //获取ID
+public void setProId(String proId) //设置ID
+（5）	实体DAO接口（用来声明数据库中增删改查的修改方法）
+public void insertProduct(Product pro);//声明插入（增）方法
+public void updateProduct(Product pro);//声明更新（改）方法
+public void deleteProduct(String sid);//声明删除方法
+public Product getProduct(String sid);//声明查询一个商品信息的方法
+public List<Product> getProductByC(String sql);// 声明查询多个商品信息的方法
+（6）	实现实体DAO接口
+public class ProductDAOMSImpl extends DAOBase implements ProductDAO //继承DAOBase连接基类，实现ProdutDAO接口中声明的方法
+
+三、	详细设计(以product实体为例)
+DAO.java
+package pro;
+
+import java.sql.Connection;
+public interface DAO {
+	public Connection getConnection();//声明连接方法
+}
+DAOBase.java
+package pro;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+public class DAOBase implements DAO {//实现DAO接口中的连接方法
+			@Override
+			public Connection getConnection() {//实现连接
+				Connection conn = null;		
+				try {
+					//加载JDBC驱动
+					String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+					//连接服务器和数据库sample
+					String dbURL = "jdbc:sqlserver://localhost:1433; DatabaseName=JD";
+//构建url=数据库管理系统的标识+数据库管理系统的地址（ip+端口）+使用的数据库实例名称
+					String userName = "s"; //默认用户名
+					String userPwd = "123"; //密码
+					try{
+						Class.forName(driverName);//加载驱动
+					}catch (ClassNotFoundException e) {
+					System.out.println("无法找到驱动类!");
+					e.printStackTrace();
+					}
+					//建立连接
+					conn = DriverManager.getConnection(dbURL,userName,userPwd);
+					System.out.println("Connection Successful!"); //如果连接成功 控制台输出
+				}catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return conn;
+			}
+}
+DAOFactory.java
+package pro;
+
+public class DAOFactory {
+	private static DAOFactory instance;	//声明instance为工厂类
+	static{
+		instance = new DAOFactory();	//new一个工厂类的instance
+	}	
+	private DAOFactory(){//构造函数
+	}	
+	public static DAOFactory getInstance(){
+		return instance;					//返回一个工厂类的instance
+	}	
+	public  ProductDAO getProductDAO(){
+//获得ProductDAO对象，其实是ProductDAOMSImpl对象
+		ProductDAO productDAO = new ProductDAOMSImpl();
+		return productDAO;
+	}
+}
+Product.java
+package pro;
+
+public class Product {
+
+	private String proId;
+	private String proName ;
+	private Float proprice;
+	private String proCo;
+	private String proTy;
+	private String typeId;
+	
+	
+	
+	public String getProId() {
+		return proId;
+	}
+	public void setProId(String proId) {
+		this.proId = proId;
+	}
+	public String getProName() {
+		return proName;
+	}
+	public void setProName(String proName) {
+		this.proName = proName;
+	}
+	public Float getProprice() {
+		return proprice;
+	}
+	public void setProprice(Float proprice) {
+		this.proprice = proprice;
+	}
+	public String getProTy() {
+		return proTy;
+	}
+	public void setProTy(String proTy) {
+		this.proTy = proTy;
+	}
+	public String getProCo() {
+		return proCo;
+	}
+	public void setProCo(String proCo) {
+		this.proCo = proCo;
+	}
+	public String getTypeId() {
+		return typeId;
+	}
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
+	
+}
+
+ProductDAO.java
+package pro;
+
+import java.util.List;
+public interface ProductDAO{
+			public void insertProduct(Product pro);//声明插入（增）方法
+			public void updateProduct(Product pro);//声明更新（改）方法
+			public void deleteProduct(String sid);//声明删除方法
+			public Product getProduct(String sid);//声明查询一个商品信息的方法
+			public List<Product> getProductByC(String sql);// 声明查询多个商品信息的方法
+}
+ProductDAOSIMpl.java
+package pro;
+
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class ProductDAOMSImpl extends DAOBase implements ProductDAO {//继承DAOBase连接基类，实现ProdutDAO接口中声明的方法
+			@SuppressWarnings("resource")
+			public static void Input(Product pro) throws IOException{
+//此方法用于输入商品信息
+				Scanner ReadStr=new Scanner(System.in);
+				Scanner ReadFLo=new Scanner(System.in);
+				System.out.println("请输入一个商品的信息：");
+				System.out.println("商品ID：");		 
+		 		pro.setProId(ReadStr.nextLine());
+		 		System.out.println("商品类型ID：");
+		 	    pro.setTypeId(ReadStr.nextLine());
+		 		System.out.println("商品名：");
+		 		pro.setProName(ReadStr.nextLine());
+		 		System.out.println("商品价格：");
+		 		pro.setProprice(ReadFLo.nextFloat());
+		 		System.out.println("商品颜色：");
+		 		pro.setProCo(ReadStr.nextLine());
+		 		System.out.println("商品类型：");
+		 		pro.setProTy(ReadStr.nextLine());
+		 		
+		 		
+			}
+			private static final String CREATE_PRODUCT_SQL ="INSERT INTO product values(?,?,?,?,?,?)";
+			@Override
+			public void insertProduct(Product pro) {//实现插入方法（增）
+				Connection conn = null;
+				PreparedStatement pst = null;
+				try{
+					conn = getConnection();//连接数据库
+					Input(pro);//输入商品信息
+					pst = conn.prepareStatement(CREATE_PRODUCT_SQL);
+					pst.setString(1,pro.getProId());
+					pst.setString(2, pro.getTypeId());
+					pst.setString(3, pro.getProName());
+					pst.setFloat(4, pro.getProprice());
+					pst.setString(5, pro.getProCo());
+					pst.setString(6, pro.getProTy());
+					
+					
+					
+					int row=pst.executeUpdate();
+					System.out.println("成功更新了"+row+"行数据!");
+					pst.close();
+					conn.close();
+				}catch(Exception e){
+					e.printStackTrace();
+				}finally{
+					if(pst!=null)
+						try {
+							pst.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					if(conn!=null)
+						try {
+							conn.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+			}
+			@Override
+			public void updateProduct(Product pro) {//实现更新（改）方法
+				//先删除，再插入；
+				// TODO Auto-generated method stub
+				try{
+					Connection conn = null;
+					Statement stmt = null;
+					int rs ;
+					try {
+						conn = getConnection();//连接数据库
+						Scanner ReadStr=new Scanner(System.in);
+						System.out.println("请输入要更新商品的ID：");	 
+						stmt = conn.createStatement();
+						String sql = "delete from product where product_id=";
+//删除已有商品信息
+						rs = stmt.executeUpdate(sql+ReadStr.nextLine());
+//返回结果
+						insertProduct(pro);//插入新的商品信息
+						//显式释放资源
+						stmt.close();		
+					}catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}finally{
+						if(stmt!=null)
+							try {
+								stmt.close();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}			
+			}
+			@Override
+			public void deleteProduct(String sid) {//实现删除方法
+				// TODO Auto-generated method stub
+				Connection conn = null;
+				Statement stmt = null;
+				int rs ;
+				try {
+					conn = getConnection();//连接数据库
+					Scanner ReadStr=new Scanner(System.in);
+					System.out.println("请输入要删除商品的ID：");		 
+			 		sid=ReadStr.nextLine();
+					stmt = conn.createStatement();
+					String sql = "delete from product where product_id=";
+					rs = stmt.executeUpdate(sql+Integer.parseInt(sid));//返回结果
+					System.out.println("成功删除了"+rs+"行数据!");
+					//显式释放资源
+					stmt.close();		
+				}catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}finally{
+					if(stmt!=null)
+						try {
+							stmt.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+			}
+			private static final String SEARCH_PRODUCTC1 = "SELECT product_id,type_id,product_name,product_price,product_color,product_type FROM product WHERE product_id=";
+			@Override
+			public Product getProduct(String sid) {//实现查询一个商品信息的方法
+				// TODO Auto-generated method stub
+				Connection conn = null;
+				Statement stmt = null;
+				ResultSet rs = null;
+				Product pro = new Product();
+				try{
+					conn = getConnection();
+					stmt = conn.createStatement();			
+					Scanner ReadStr=new Scanner(System.in);
+					System.out.println("请输入要查询商品ID：");		 
+					sid=ReadStr.nextLine();
+					String endsql = null;
+					endsql = SEARCH_PRODUCTC1 +Integer.parseInt(sid);
+					rs=stmt.executeQuery(endsql);
+					while(rs.next()){				
+						pro.setProId(rs.getString("product_id"));
+						pro.setTypeId(rs.getString("type_id"));
+						pro.setProName(rs.getString("product_name"));
+						pro.setProprice(rs.getFloat("product_price"));
+						pro.setProCo(rs.getString("product_color"));
+						pro.setProTy(rs.getString("product_type"));
+						
+						System.out.println(pro.getProId()+" "+pro.getProName()+" "+pro.getProprice()+"  "+pro.getProCo()+"  "+pro.getProTy());
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}finally{
+					if(rs!=null)
+						try {
+							rs.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					if(stmt!=null)
+						try {
+							stmt.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					if(conn!=null)
+						try {
+							conn.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+				return null;
+			}
+			private static final String SEARCH_PRODUCTTC = "SELECT * FROM product";
+			@Override
+			public List<Product> getProductByC(String sql) {
+//实现查询多个商品信息的方法
+				List<Product> products = new ArrayList<Product>();
+				Connection conn = null;
+				Statement stmt = null;
+				ResultSet rs = null;
+				try{
+					conn = getConnection();
+					stmt = conn.createStatement();
+					String endsql = null;
+					if(sql.equals(" ")){
+						endsql = SEARCH_PRODUCTTC;
+					}else{
+						endsql = SEARCH_PRODUCTTC + " WHERE "+sql;
+					}
+					rs=stmt.executeQuery(endsql);
+					while(rs.next()){
+						Product product = new Product();
+						product.setProId(rs.getString("product_id"));
+						product.setTypeId(rs.getString("type_id"));
+						product.setProName(rs.getString("product_name"));
+						product.setProprice(rs.getFloat("product_price"));
+						product.setProCo(rs.getString("product_color"));
+						product.setProTy(rs.getString("product_type"));
+							products.add(product);
+					}
+					for(int i=0;i<products.size();i++){
+				 		Product s = new Product();
+				 		s=products.get(i);
+				 		System.out.println(s.getProId()+"  "+s.getProName()+" "+s.getProprice()+"  "+s.getProCo()+"  "+s.getProTy());
+					 }
+					rs.close();
+					stmt.close();
+					conn.close();
+				}catch(Exception e){
+					e.printStackTrace();
+				}finally{
+					if(rs!=null)
+						try {
+							rs.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					if(stmt!=null)
+						try {
+							stmt.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					if(conn!=null)
+						try {
+							conn.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+				return products;
+			}
+}
+
+四、	测试
+请输入数字选择需要查询的表：
+1表示用户信息，2表示产品信息，3表示快递信息，4表示产品类型信息，5表示订单信息
+4
+产品类型信息加载中......
+请输入要修改的项目:
+1表示增加数据，2表示修改数据，3表示删除数据，4表示查询数据
+1
+Connection Successful!
+请输入一个商品类型的信息：
+类型ID：
+114
+类型名：
+图书音像
+成功更新了1行数据!
+
+
+请输入数字选择需要查询的表：
+1表示用户信息，2表示产品信息，3表示快递信息，4表示产品类型信息，5表示订单信息
+2
+产品信息加载中......
+请输入要修改的项目:
+1表示增加数据，2表示修改数据，3表示删除数据，4表示查询数据
+2
+Connection Successful!
+请输入要更新商品的ID：
+111
+Connection Successful!
+请输入一个商品的信息：
+商品ID：
+111
+商品类型ID：
+113
+商品名：
+柚子
+商品价格：
+55
+商品颜色：
+红心
+商品类型：
+水果生鲜
+成功更新了1行数据!
+
+请输入数字选择需要查询的表：
+1表示用户信息，2表示产品信息，3表示快递信息，4表示产品类型信息，5表示订单信息
+1
+用户信息加载中......
+请输入要修改的项目:
+1表示增加数据，2表示修改数据，3表示删除数据，4表示查询数据
+4
+Connection Successful!
+请输入要查询用户ID：
+111
+111                 刘昊然26        男        110北京市123                 
+Connection Successful!
+下面将输出表中所有内容：
+111                 刘昊然26        男        110北京市123                 
+请输入数字选择需要查询的表：
+1表示用户信息，2表示产品信息，3表示快递信息，4表示产品类型信息，5表示订单信息
+3
+快递信息加载中......
+请输入要修改的项目:
+1表示增加数据，2表示修改数据，3表示删除数据，4表示查询数据
+2
+Connection Successful!
+请输入要更新商品的ID：
+111
+Connection Successful!
+请输入一个快递单的信息：
+快递单ID：
+111
+订单ID：
+111
+订单信息：
+折叠桌
+快递员ID：
+456
+快递员姓名：
+崔崔
+成功更新了1行数据!
+
+
+请输入数字选择需要查询的表：
+1表示用户信息，2表示产品信息，3表示快递信息，4表示产品类型信息，5表示订单信息
+5
+订单信息加载中......
+请输入要修改的项目:
+1表示增加数据，2表示修改数据，3表示删除数据，4表示查询数据
+4
+Connection Successful!
+请输入要查询订单ID：
+111
+111                                               111                 2018                666.0派送中刘昊然华为手机1
+Connection Successful!
+下面将输出表中所有内容：
+111                                               111                 2018                666.0派送中刘昊然华为手机1
+
